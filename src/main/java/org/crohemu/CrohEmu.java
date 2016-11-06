@@ -2,6 +2,7 @@ package org.crohemu;
 
 import org.apache.log4j.BasicConfigurator;
 import org.crohemu.config.BeanConfig;
+import org.crohemu.server.auth.AuthClientHandler;
 import org.crohemu.server.auth.AuthServer;
 import org.crohemu.server.auth.AuthServerConfig;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,10 @@ public class CrohEmu {
             applicationContext.getBean(AuthServer.class).listen();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        while (true) {
+            Thread.yield();
         }
     }
 }
