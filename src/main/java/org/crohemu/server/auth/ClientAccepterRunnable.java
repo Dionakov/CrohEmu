@@ -1,6 +1,5 @@
 package org.crohemu.server.auth;
 
-import org.crohemu.server.auth.AuthClientHandler;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 

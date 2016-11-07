@@ -2,16 +2,10 @@ package org.crohemu.server.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -22,10 +16,11 @@ import java.util.regex.Pattern;
  */
 public class AuthServerConfig {
 
-    private static Logger logger = LoggerFactory.getLogger("Main");
+    private static Logger logger = LoggerFactory.getLogger(AuthServerConfig.class);
 
     private static String ipAddress = null;
     private static Integer portNumber = null;
+    private static ExecMode execMode = null;
 
     private final static String IPV4_PATTERN = "^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
             ".(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
@@ -52,26 +47,53 @@ public class AuthServerConfig {
 
         ipAddress = readIpAddress();
         portNumber = readPortNumber();
+        execMode = readExecMode();
     }
 
     private static String readIpAddress() {
-        String ipAddress = configProperties.getProperty("ipAddress");
+        final String PROP_NAME = "ipAddress";
+
+        String ipAddress = configProperties.getProperty(PROP_NAME);
 
         if (ipAddress == null || !Pattern.matches(IPV4_PATTERN, ipAddress)) {
-            logger.error("Invalid value for property ipAddress in config file {}", CONFIG_FILE_PATH);
+            handleInvalidProperty(PROP_NAME);
         }
 
         return ipAddress;
     }
 
     private static Integer readPortNumber() {
-        int portNumber = Integer.parseInt(configProperties.getProperty("portNumber"));
+        String PROP_NAME = "portNumber";
+        int portNumber = Integer.parseInt(configProperties.getProperty(PROP_NAME));
 
         if (portNumber <= 1024 || portNumber >= 65536) {
-            logger.error("Invalid value for property portNumber in config file {}", CONFIG_FILE_PATH);
+            handleInvalidProperty(PROP_NAME);
         }
 
         return portNumber;
+    }
+
+    private static ExecMode readExecMode() {
+        String PROP_NAME = "execMode";
+
+        String execModeStr = configProperties.getProperty(PROP_NAME);
+        switch (execModeStr) {
+            case "debug0":
+                return ExecMode.DEBUG0;
+            case "debug1":
+                return ExecMode.DEBUG1;
+            case "release":
+                return ExecMode.RELEASE;
+            case "silent":
+                return ExecMode.SILENT;
+            default:
+                handleInvalidProperty(PROP_NAME);
+                return null;
+        }
+    }
+
+    private static void handleInvalidProperty(String propName) {
+        logger.error("invalid value for property {} in config file {}", propName, CONFIG_FILE_PATH);
     }
 
     public static String getIpAddress() {
@@ -80,5 +102,9 @@ public class AuthServerConfig {
 
     public static int getPortNumber() {
         return portNumber;
+    }
+
+    public enum ExecMode {
+        DEBUG0, DEBUG1, RELEASE, SILENT
     }
 }
