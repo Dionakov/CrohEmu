@@ -1,21 +1,18 @@
-package org.crohemu.server.impl;
+package org.crohemu.network.tcpwrapper.impl;
 
-import org.crohemu.server.*;
+import org.crohemu.network.tcpwrapper.TcpClient;
+import org.crohemu.network.tcpwrapper.TcpDataHandler;
+import org.crohemu.network.tcpwrapper.TcpServer;
 
-import javax.swing.event.EventListenerList;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class TcpServerImpl implements TcpServer {
-    EventListenerList eventListenerList = new EventListenerList();
-
     ServerSocket serverSocket;
 
     List<TcpClient> clients = new ArrayList<>();
@@ -41,19 +38,4 @@ public class TcpServerImpl implements TcpServer {
                 }
             }).start();
     }
-//todo move this to dataHandler
-   /* @Override
-    public void addMessageListener(TcpMessageListener tcpMessageListener) {
-        eventListenerList.add(TcpMessageListener.class, tcpMessageListener);
-    }
-
-    @Override
-    public void removeMessageListener(TcpMessageListener tcpMessageListener) {
-        eventListenerList.remove(TcpMessageListener.class, tcpMessageListener);
-    }
-
-    private void fireTcpMessageReceivedEvent(TcpMessageReceivedEvent tcpMessageReceivedEvent) {
-        Arrays.asList(eventListenerList.getListeners(TcpMessageListener.class))
-                .forEach(tcpMessageListener -> tcpMessageListener.onTcpMessageReceivedEvent(tcpMessageReceivedEvent));
-    }*/
 }

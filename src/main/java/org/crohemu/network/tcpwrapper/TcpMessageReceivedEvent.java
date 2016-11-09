@@ -1,4 +1,4 @@
-package org.crohemu.server;
+package org.crohemu.network.tcpwrapper;
 
 public class TcpMessageReceivedEvent {
     TcpMessage tcpMessage;
