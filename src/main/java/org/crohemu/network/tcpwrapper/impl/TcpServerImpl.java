@@ -28,7 +28,7 @@ public class TcpServerImpl implements TcpServer {
                     clients.add(newClient);
                     new Thread(() -> {
                         try {
-                            dataHandler.handleTcpData(clientSocket.getInputStream());
+                            dataHandler.handleTcpData(newClient);
                         } catch (IOException e) {
                             throw new UncheckedIOException(e);
                         }

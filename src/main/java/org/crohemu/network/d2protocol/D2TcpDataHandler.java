@@ -1,6 +1,7 @@
 package org.crohemu.network.d2protocol;
 
 import org.crohemu.network.d2protocol.message.D2MessageFactory;
+import org.crohemu.network.tcpwrapper.TcpClient;
 import org.crohemu.network.tcpwrapper.TcpDataHandler;
 
 import javax.inject.Inject;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class D2TcpDataHandler implements TcpDataHandler {
+    public static final int HIGH_HEADER_LENGTH = 2;
+
     private D2MessageHandler messageHandler;
 
     @Inject
@@ -18,12 +21,12 @@ public class D2TcpDataHandler implements TcpDataHandler {
     }
 
     @Override
-    public void handleTcpData(InputStream socketIn) throws IOException {
-        int messageLength = 0;
+    public void handleTcpData(TcpClient client) throws IOException {
+        int messageLength;
         do {
-            byte[] messageData = readD2Message(socketIn);
+            byte[] messageData = readD2Message(client.getSocket().getInputStream());
 
-            messageHandler.handleD2Message(d2MessageFactory.createMessage(messageData));
+            messageHandler.handleD2Message(d2MessageFactory.createMessage(messageData, client));
 
             messageLength = messageData.length;
         } while (messageLength > 0);
@@ -38,7 +41,7 @@ public class D2TcpDataHandler implements TcpDataHandler {
         int messageLength = -1;
 
         // what we read in an iteration. Its size fluctuates.
-        byte[] messagePartBuffer = new byte[2];
+        byte[] messagePartBuffer = new byte[HIGH_HEADER_LENGTH];
 
         // next number of bytes to read
         int nextChunkSize = 0;
@@ -49,7 +52,7 @@ public class D2TcpDataHandler implements TcpDataHandler {
                 break;
             }
 
-            // data is D2 message id + messageTypeLen
+            // data is D2 high header
             if (totalBytesRead == 0) {
                 messageTypeLen = messagePartBuffer[1] & 0b00000011;
                 if (messageTypeLen == 0) {
@@ -57,8 +60,8 @@ public class D2TcpDataHandler implements TcpDataHandler {
                 }
                 nextChunkSize = messageTypeLen;
             }
-            // data is D2 message messageLength
-            else if (totalBytesRead == 2) {
+            // data is D2 messageLength
+            else if (totalBytesRead == HIGH_HEADER_LENGTH) {
                 byte[] t = messagePartBuffer; // for shorter lines
                 switch (messageTypeLen) {
                     case 1:
@@ -76,7 +79,7 @@ public class D2TcpDataHandler implements TcpDataHandler {
             // else data is message content. We just add it to the result buffer.
 
             totalBytesRead += bytesRead;
-            if (messageLength != -1 && totalBytesRead == messageLength + messageTypeLen + 2) {
+            if (messageLength != -1 && totalBytesRead == messageLength + messageTypeLen + HIGH_HEADER_LENGTH) {
                 fullMessageHasBeenRead = true;
             }
 

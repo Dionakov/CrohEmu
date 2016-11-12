@@ -1,25 +1,29 @@
 package org.crohemu.network.tcpwrapper;
 
-import java.util.Date;
+import java.util.Objects;
 
-/**
- * TCP message POJO
- */
 public class TcpMessage {
 
-    byte[] content = null;
-    Date timestamp = null;
+    protected byte[] rawContent;
+    private TcpClient source;
 
-    public TcpMessage(byte[] content, Date timestamp) {
-        this.content = content;
-        this.timestamp = timestamp;
+    public TcpMessage(byte[] rawContent, TcpClient source) {
+        this.rawContent = rawContent;
+        this.source = Objects.requireNonNull(source);
     }
 
-    public byte[] getContent() {
-        return content;
+    public TcpMessage() {
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public byte[] getRawContent() {
+        return rawContent;
+    }
+
+    public TcpClient getSource() {
+        return source;
+    }
+
+    public void serialize() {
+
     }
 }
