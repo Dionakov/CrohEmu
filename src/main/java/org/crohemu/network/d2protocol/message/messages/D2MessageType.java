@@ -1,8 +1,9 @@
 package org.crohemu.network.d2protocol.message.messages;
 
 public enum D2MessageType {
-    PROTOCOL_REQUIRED(1), 
-    UNKNOWN(-1);
+    UNKNOWN(-1),
+    RAW(-209332),
+    PROTOCOL_REQUIRED(1);
 
     private int id;
 

@@ -2,15 +2,21 @@ package org.crohemu.network.d2protocol;
 
 import org.crohemu.network.d2protocol.message.D2MessageFactory;
 import org.crohemu.network.tcpwrapper.TcpClient;
-import org.crohemu.network.tcpwrapper.TcpDataHandler;
+import org.crohemu.network.tcpwrapper.handler.TcpDataHandler;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
+@Component
 public class D2TcpDataHandler implements TcpDataHandler {
     public static final int HIGH_HEADER_LENGTH = 2;
 
+    @Resource
     private D2MessageHandler messageHandler;
 
     @Inject
@@ -25,6 +31,11 @@ public class D2TcpDataHandler implements TcpDataHandler {
         int messageLength;
         do {
             byte[] messageData = readD2Message(client.getSocket().getInputStream());
+
+            // connection closed
+            if (messageData.length == 0) {
+                return;
+            }
 
             messageHandler.handleD2Message(d2MessageFactory.createMessage(messageData, client));
 
@@ -92,6 +103,6 @@ public class D2TcpDataHandler implements TcpDataHandler {
             messagePartBuffer = new byte[nextChunkSize];
         }
 
-        return fullMessageBuffer;
+        return ByteBuffer.wrap(fullMessageBuffer).order(ByteOrder.LITTLE_ENDIAN).array();
     }
 }

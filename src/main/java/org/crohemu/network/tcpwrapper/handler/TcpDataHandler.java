@@ -1,4 +1,6 @@
-package org.crohemu.network.tcpwrapper;
+package org.crohemu.network.tcpwrapper.handler;
+
+import org.crohemu.network.tcpwrapper.TcpClient;
 
 import java.io.IOException;
 

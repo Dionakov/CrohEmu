@@ -1,7 +1,8 @@
 package org.crohemu.network.tcpwrapper.impl;
 
 import org.crohemu.network.tcpwrapper.TcpClient;
-import org.crohemu.network.tcpwrapper.TcpDataHandler;
+import org.crohemu.network.tcpwrapper.handler.TcpClientConnectionHandler;
+import org.crohemu.network.tcpwrapper.handler.TcpDataHandler;
 import org.crohemu.network.tcpwrapper.TcpServer;
 
 import java.io.IOException;
@@ -17,8 +18,11 @@ public class TcpServerImpl implements TcpServer {
 
     List<TcpClient> clients = new ArrayList<>();
 
+    TcpDataHandler dataHandler;
+    TcpClientConnectionHandler clientConnectionHandler;
+
     @Override
-    public void start(InetAddress ipAddress, int portNumber, TcpDataHandler dataHandler) throws IOException {
+    public void start(InetAddress ipAddress, int portNumber) throws IOException {
         serverSocket = new ServerSocket(portNumber, Integer.MAX_VALUE, ipAddress);
 
             new Thread(() -> {
@@ -26,6 +30,7 @@ public class TcpServerImpl implements TcpServer {
                     Socket clientSocket = serverSocket.accept();
                     TcpClient newClient = new TcpClient(clientSocket);
                     clients.add(newClient);
+                    this.clientConnectionHandler.onClientConnected(newClient);
                     new Thread(() -> {
                         try {
                             dataHandler.handleTcpData(newClient);
@@ -37,5 +42,15 @@ public class TcpServerImpl implements TcpServer {
                     throw new UncheckedIOException(e);
                 }
             }).start();
+    }
+
+    @Override
+    public void setDataHandler(TcpDataHandler dataHandler) {
+        this.dataHandler = dataHandler;
+    }
+
+    @Override
+    public void setClientConnectionHandler(TcpClientConnectionHandler tcpClientConnectionHandler) {
+        this.clientConnectionHandler = tcpClientConnectionHandler;
     }
 }

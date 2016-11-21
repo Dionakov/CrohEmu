@@ -3,11 +3,10 @@ package org.crohemu.config;
 import org.crohemu.network.d2protocol.D2TcpDataHandler;
 import org.crohemu.network.d2protocol.message.D2MessageFactory;
 import org.crohemu.network.d2protocol.message.impl.D2MessageFactoryImpl;
-import org.crohemu.network.tcpwrapper.TcpDataHandler;
+import org.crohemu.network.tcpwrapper.handler.TcpDataHandler;
 import org.crohemu.server.auth.AuthServer;
 import org.crohemu.server.auth.AuthServerMessageHandler;
 import org.crohemu.server.auth.controller.AuthMessageControllerMap;
-import org.crohemu.server.common.controller.MessageControllerMap;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -17,8 +16,8 @@ import org.springframework.context.annotation.Bean;
  */
 public class BeanConfig {
 
-    @Bean(name = "authServerMessageControllerMap")
-    MessageControllerMap authServerMessageControllerMap() {
+    @Bean
+    AuthMessageControllerMap authMessageControllerMap() {
         return new AuthMessageControllerMap();
     }
 

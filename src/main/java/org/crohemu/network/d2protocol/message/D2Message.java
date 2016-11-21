@@ -51,7 +51,7 @@ public abstract class D2Message extends TcpMessage {
     /**
      * Extract the message content data from the raw bytes.
      * @param messageData The raw socket bytes
-     * @param contentOffset The offset at which the actual content starts
+     * @par0am contentOffset The offset at which the actual content starts
      */
     protected abstract void deserialize(byte[] messageData, int contentOffset);
 
@@ -64,7 +64,7 @@ public abstract class D2Message extends TcpMessage {
 
         byte[] highHeader = new byte[2];
         highHeader[0] = (byte) (type.getId() >> 6);
-        highHeader[1] = (byte) (type.getId() << 2 & lengthType);
+        highHeader[1] = (byte) ((type.getId() << 2) | lengthType);
 
         byteBuffer.put(highHeader);
 

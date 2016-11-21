@@ -8,17 +8,19 @@ import java.nio.ByteBuffer;
 
 public final class ProtocolRequiredMessage extends D2Message {
 
-    private final D2MessageType type = D2MessageType.PROTOCOL_REQUIRED;
-
     private int requiredVersion;
     private int currentVersion;
 
     public ProtocolRequiredMessage(byte[] messageData, TcpClient source) {
         super(messageData, source);
+        type = D2MessageType.PROTOCOL_REQUIRED;
     }
 
-    public ProtocolRequiredMessage() {
+    public ProtocolRequiredMessage(int requiredVersion, int currentVersion) {
         super();
+        type = D2MessageType.PROTOCOL_REQUIRED;
+        this.requiredVersion = requiredVersion;
+        this.currentVersion = currentVersion;
     }
 
     @Override

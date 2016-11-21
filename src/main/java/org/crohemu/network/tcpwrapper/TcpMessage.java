@@ -5,7 +5,7 @@ import java.util.Objects;
 public class TcpMessage {
 
     protected byte[] rawContent;
-    private TcpClient source;
+    protected TcpClient source;
 
     public TcpMessage(byte[] rawContent, TcpClient source) {
         this.rawContent = rawContent;
