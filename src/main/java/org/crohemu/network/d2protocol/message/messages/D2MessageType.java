@@ -3,7 +3,8 @@ package org.crohemu.network.d2protocol.message.messages;
 public enum D2MessageType {
     UNKNOWN(-1),
     RAW(-209332),
-    PROTOCOL_REQUIRED(1);
+    PROTOCOL_REQUIRED(1),
+    HELLO_CONNECT(3);
 
     private int id;
 

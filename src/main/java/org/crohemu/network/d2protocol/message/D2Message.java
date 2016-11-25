@@ -9,9 +9,7 @@ import java.nio.ByteBuffer;
 
 public abstract class D2Message extends TcpMessage {
 
-
     public static final int HIGH_HEADER_SIZE = 2;
-    public static final int SIZEOF_INT = 4;
 
     protected D2MessageType type;
 

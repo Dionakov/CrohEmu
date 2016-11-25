@@ -5,6 +5,7 @@ import org.crohemu.network.tcpwrapper.TcpClient;
 
 import java.nio.ByteBuffer;
 
+@Deprecated
 public class RawMessage extends D2Message {
 
     private byte[] content;
@@ -29,7 +30,7 @@ public class RawMessage extends D2Message {
 
     @Override
     public void serialize() {
-        this.rawContent = new byte[content.length + SIZEOF_INT];
+        this.rawContent = new byte[content.length + Integer.BYTES];
         ByteBuffer byteBuffer = ByteBuffer.wrap(rawContent);
 
         switch (computeLengthType(length)) {

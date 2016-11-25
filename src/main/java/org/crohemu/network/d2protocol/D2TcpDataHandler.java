@@ -9,8 +9,6 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 @Component
 public class D2TcpDataHandler implements TcpDataHandler {
@@ -103,6 +101,6 @@ public class D2TcpDataHandler implements TcpDataHandler {
             messagePartBuffer = new byte[nextChunkSize];
         }
 
-        return ByteBuffer.wrap(fullMessageBuffer).order(ByteOrder.LITTLE_ENDIAN).array();
+        return fullMessageBuffer;
     }
 }

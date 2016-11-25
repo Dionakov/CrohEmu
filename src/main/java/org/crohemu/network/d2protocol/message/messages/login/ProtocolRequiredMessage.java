@@ -33,7 +33,7 @@ public final class ProtocolRequiredMessage extends D2Message {
 
     @Override
     public void serialize() {
-        this.length = 2 * SIZEOF_INT;
+        this.length = 2 * Integer.BYTES;
         this.lengthType = this.computeLengthType(this.length);
         ByteBuffer byteBuffer = serializeHeader();
 
